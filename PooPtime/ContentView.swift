@@ -8,52 +8,169 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var navigateToLearning = false
+    @State private var bulbAnimating = false
+
+    // New state for game button animation and navigation
+    @State private var navigateToGame = false
+    @State private var gameIconAnimating = false
+
+    // New state for meditation button animation and navigation
+    @State private var navigateToMeditation = false
+    @State private var meditationIconAnimating = false
+
     var body: some View {
-        ZStack {
-            LinearGradient(
-                colors: [Color("blue1"), Color("blue2")],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .ignoresSafeArea()
+        NavigationStack {
+            ZStack {
+                LinearGradient(
+                    colors: [Color("blue1"), Color("blue2")],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .ignoresSafeArea()
 
-            VStack(spacing: 24) {
-                Text("How would you like to spend your toilet time today?")
-                    .font(.title.bold())
-                    .multilineTextAlignment(.center)
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [Color("brown1"), Color("brown2")],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
+                VStack(spacing: 24) {
+                    GradientTitle("How would you like to spend your toilet time today?")
+
+                    // Buttons stack
+                    VStack(spacing: 16) {
+                        // Programmatic navigation for the first button so we can finish the animation first
+                        ZStack {
+                            NavigationLink("", destination: LearningView(), isActive: $navigateToLearning)
+                                .opacity(0) // hidden link to drive navigation
+                                .accessibilityHidden(true)
+
+                            Button {
+                                // Start the icon animation
+                                withAnimation(.easeInOut(duration: 0.3)) {
+                                    bulbAnimating = true
+                                }
+
+                                // Trigger navigation after animation completes
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                    navigateToLearning = true
+                                    // Reset animation state for when user comes back
+                                    bulbAnimating = false
+                                }
+                            } label: {
+                                HStack(spacing: 8) {
+                                    Image(systemName: "lightbulb.max")
+                                        .symbolRenderingMode(.hierarchical)
+                                        .imageScale(.large)
+                                        .font(.system(.title3, design: .rounded).weight(.bold))
+                                        .opacity(bulbAnimating ? 0.0 : 1.0)
+                                        .scaleEffect(bulbAnimating ? 0.8 : 1.0)
+                                        .animation(.easeInOut(duration: 0.3), value: bulbAnimating)
+
+                                    Text("Learn something quick")
+                                        .font(.system(.title3, design: .rounded).weight(.bold))
+                                }
+                                .frame(maxWidth: .infinity, alignment: .center)
+                            }
+                            .buttonStyle(LiquidGlassButtonStyle())
+                        }
+
+                        // Programmatic navigation and animated icon for the Game button
+                        ZStack {
+                            NavigationLink("", destination: GameView(), isActive: $navigateToGame)
+                                .opacity(0) // hidden link to drive navigation
+                                .accessibilityHidden(true)
+
+                            Button {
+                                // Animate the game controller icon fade-out and scale-down
+                                withAnimation(.easeInOut(duration: 0.3)) {
+                                    gameIconAnimating = true
+                                }
+
+                                // Navigate after the animation completes
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                    navigateToGame = true
+                                    // Reset animation state when coming back
+                                    gameIconAnimating = false
+                                }
+                            } label: {
+                                HStack(spacing: 8) {
+                                    Image(systemName: "gamecontroller")
+                                        .symbolRenderingMode(.hierarchical)
+                                        .imageScale(.large)
+                                        .font(.system(.title3, design: .rounded).weight(.bold))
+                                        .opacity(gameIconAnimating ? 0.0 : 1.0)
+                                        .scaleEffect(gameIconAnimating ? 0.8 : 1.0)
+                                        .animation(.easeInOut(duration: 0.3), value: gameIconAnimating)
+
+                                    Text("Play a short game")
+                                        .font(.system(.title3, design: .rounded).weight(.bold))
+                                }
+                                .frame(maxWidth: .infinity, alignment: .center)
+                            }
+                            .buttonStyle(LiquidGlassButtonStyle())
+                        }
+
+                        // Programmatic navigation and animated icon for the Meditation button
+                        ZStack {
+                            NavigationLink("", destination: MeditationView(), isActive: $navigateToMeditation)
+                                .opacity(0) // hidden link to drive navigation
+                                .accessibilityHidden(true)
+
+                            Button {
+                                // Animate the leaf icon fade-out and scale-down
+                                withAnimation(.easeInOut(duration: 0.3)) {
+                                    meditationIconAnimating = true
+                                }
+
+                                // Navigate after the animation completes
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                    navigateToMeditation = true
+                                    // Reset animation state when coming back
+                                    meditationIconAnimating = false
+                                }
+                            } label: {
+                                HStack(spacing: 8) {
+                                    Image(systemName: "leaf")
+                                        .symbolRenderingMode(.hierarchical)
+                                        .imageScale(.large)
+                                        .font(.system(.title3, design: .rounded).weight(.bold))
+                                        .opacity(meditationIconAnimating ? 0.0 : 1.0)
+                                        .scaleEffect(meditationIconAnimating ? 0.8 : 1.0)
+                                        .animation(.easeInOut(duration: 0.3), value: meditationIconAnimating)
+
+                                    Text("Relax with a mini meditation")
+                                        .font(.system(.title3, design: .rounded).weight(.bold))
+                                }
+                                .frame(maxWidth: .infinity, alignment: .center)
+                            }
+                            .buttonStyle(LiquidGlassButtonStyle())
+                        }
+                    }
                     .padding(.horizontal, 24)
-                    .shadow(color: .black.opacity(0.25), radius: 4, x: 0, y: 2)
 
-                // Buttons stack
-                VStack(spacing: 16) {
-                    Button("Learn something quick") {
-                        // TODO: Add action
-                    }
-                    .buttonStyle(LiquidGlassButtonStyle())
-
-                    Button("Play a short game") {
-                        // TODO: Add action
-                    }
-                    .buttonStyle(LiquidGlassButtonStyle())
-
-                    Button("Relax with a mini meditation") {
-                        // TODO: Add action
-                    }
-                    .buttonStyle(LiquidGlassButtonStyle())
+                    Spacer(minLength: 0)
                 }
-                .padding(.horizontal, 24)
-
-                Spacer(minLength: 0)
+                .padding(.top, 24)
             }
-            .padding(.top, 24)
+            .navigationBarHidden(true)
         }
+    }
+}
+
+// Shared title styling to ensure consistency across pages
+struct GradientTitle: View {
+    let text: String
+    init(_ text: String) { self.text = text }
+
+    var body: some View {
+        Text(text)
+            .font(.title.bold())
+            .multilineTextAlignment(.center)
+            .foregroundStyle(
+                LinearGradient(
+                    colors: [Color("brown1"), Color("brown2")],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+            )
+            .padding(.horizontal, 24)
+            .shadow(color: .black.opacity(0.25), radius: 4, x: 0, y: 2)
     }
 }
 
