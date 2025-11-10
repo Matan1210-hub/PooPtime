@@ -36,10 +36,6 @@ struct ContentView: View {
                     VStack(spacing: 16) {
                         // Programmatic navigation for the first button so we can finish the animation first
                         ZStack {
-                            NavigationLink("", destination: LearningView(), isActive: $navigateToLearning)
-                                .opacity(0) // hidden link to drive navigation
-                                .accessibilityHidden(true)
-
                             Button {
                                 // Start the icon animation
                                 withAnimation(.easeInOut(duration: 0.3)) {
@@ -72,10 +68,6 @@ struct ContentView: View {
 
                         // Programmatic navigation and animated icon for the Game button
                         ZStack {
-                            NavigationLink("", destination: GameView(), isActive: $navigateToGame)
-                                .opacity(0) // hidden link to drive navigation
-                                .accessibilityHidden(true)
-
                             Button {
                                 // Animate the game controller icon fade-out and scale-down
                                 withAnimation(.easeInOut(duration: 0.3)) {
@@ -108,10 +100,6 @@ struct ContentView: View {
 
                         // Programmatic navigation and animated icon for the Meditation button
                         ZStack {
-                            NavigationLink("", destination: MeditationView(), isActive: $navigateToMeditation)
-                                .opacity(0) // hidden link to drive navigation
-                                .accessibilityHidden(true)
-
                             Button {
                                 // Animate the leaf icon fade-out and scale-down
                                 withAnimation(.easeInOut(duration: 0.3)) {
@@ -149,6 +137,16 @@ struct ContentView: View {
                 .padding(.top, 24)
             }
             .navigationBarHidden(true)
+            // Modern programmatic navigation destinations
+            .navigationDestination(isPresented: $navigateToLearning) {
+                LearningView()
+            }
+            .navigationDestination(isPresented: $navigateToGame) {
+                GameView()
+            }
+            .navigationDestination(isPresented: $navigateToMeditation) {
+                MeditationView()
+            }
         }
     }
 }
